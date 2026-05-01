@@ -5,7 +5,7 @@
     <h2>Halaman Dosen</h2>
 
     @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
 
     <div class="card">
@@ -17,21 +17,22 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-center">No</th>
-                        <th scope="col">NIDN</th>
-                        <th scope="col">Nama</th>
-                        <th scope="col">Aksi</th>
+                        <th class="text-center">No</th>
+                        <th>NIDN</th>
+                        <th>Nama</th>
+                        <th width="25%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($dosen as $item)
+                    @foreach($dataDosen as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->nidn }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                            <a href="{{ route('dosen.edit', ['nidn' => $item->nidn]) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('dosen.detail', ['nidn' => $item->nidn]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>
                     </tr>
                     @endforeach

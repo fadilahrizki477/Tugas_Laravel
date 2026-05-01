@@ -2,15 +2,23 @@
 
 @section('content')
 <div class="container mt-3">
+    <h1>{{ isset($detailDosen) ? 'Edit' : 'Tambah' }} Dosen</h1>
     <div class="card">
-        <div class="card-header">Form Tambah Dosen</div>
+        <div class="card-header">{{ isset($detailDosen) ? 'Edit' : 'Tambah' }} Dosen</div>
         <div class="card-body">
 
-            <form method="POST" action="{{ route('dosen.store') }}">
+            <form method="POST" action="{{ isset($detailDosen) ? route('dosen.update', ['nidn' => $detailDosen->nidn]) : route('dosen.store') }}">
                 @csrf
+                @if(isset($detailDosen))
+                    @method('PUT')
+                @endif
+
                 <div class="mb-3">
                     <label class="form-label">NIDN</label>
-                    <input type="text" class="form-control" name="nidn" value="{{ old('nidn') }}" maxlength="10" placeholder="Masukkan NIDN (10 digit)">
+                    <input type="text" class="form-control" name="nidn"
+                        value="{{ old('nidn', $detailDosen->nidn ?? '') }}"
+                        maxlength="10"
+                        {{ isset($detailDosen) ? '' : '' }}>
                     @error('nidn')
                     <div class="form-text text-danger">{{ $message }}</div>
                     @enderror
@@ -18,7 +26,9 @@
 
                 <div class="mb-3">
                     <label class="form-label">Nama</label>
-                    <input type="text" class="form-control" name="nama" value="{{ old('nama') }}" maxlength="50" placeholder="Masukkan nama dosen">
+                    <input type="text" class="form-control" name="nama"
+                        value="{{ old('nama', $detailDosen->nama ?? '') }}"
+                        maxlength="50">
                     @error('nama')
                     <div class="form-text text-danger">{{ $message }}</div>
                     @enderror

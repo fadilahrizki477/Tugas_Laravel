@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dosen;
-use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use App\Models\Mahasiswa;
+use App\Models\Dosen;
 
 class MahasiswaController extends Controller
 {
     public function index()
     {
-        $mahasiswa = Mahasiswa::with('dosen')->get();
-        return view('mahasiswa.index', compact('mahasiswa'));
+        $dataMahasiswa = Mahasiswa::with('dosen')->orderBy('npm', 'asc')->get();
+        return view('mahasiswa.index', compact('dataMahasiswa'));
     }
 
     public function create()
@@ -22,29 +22,58 @@ class MahasiswaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'npm'  => 'required|max:10|unique:mahasiswa,npm',
-            'nidn' => 'required|exists:dosen,nidn',
-            'nama' => 'required|max:50',
-        ]);
+        $validated = $request->validate(
+            [
+                'npm'  => 'required|max:10|unique:mahasiswa,npm',
+                'nidn' => 'required|exists:dosen,nidn',
+                'nama' => 'required|min:3|max:50',
+            ],
+            [
+                'npm.required'  => 'NPM tidak boleh dikosongkan',
+                'npm.unique'    => 'NPM sudah terdaftar',
+                'nidn.required' => 'Dosen wali harus dipilih',
+                'nama.required' => 'Nama tidak boleh dikosongkan',
+                'nama.min'      => 'Nama terlalu pendek, minimal 3 karakter',
+            ]
+        );
 
-        Mahasiswa::create($request->all());
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan!');
+        Mahasiswa::create($validated);
+        return redirect()->route('mahasiswa')->with('success', 'Data mahasiswa berhasil ditambahkan');
     }
 
-    public function edit($npm)
+    public function show(string $npm)
     {
-        
+        $detailMahasiswa = Mahasiswa::with('dosen')->findOrFail($npm);
+        return view('mahasiswa.detail', compact('detailMahasiswa'));
     }
 
-    public function update(Request $request, $npm)
+    public function edit(string $npm)
     {
-        
+        $detailMahasiswa = Mahasiswa::findOrFail($npm);
+        $dosen           = Dosen::all();
+        return view('mahasiswa.create', compact('detailMahasiswa', 'dosen'));
     }
 
-    public function destroy($npm)
+    public function update(Request $request, string $npm)
     {
-        
+        $validated = $request->validate(
+            [
+                'nidn' => 'required|exists:dosen,nidn',
+                'nama' => 'required|min:3|max:50',
+            ],
+            [
+                'nidn.required' => 'Dosen wali harus dipilih',
+                'nama.required' => 'Nama tidak boleh dikosongkan',
+                'nama.min'      => 'Nama terlalu pendek, minimal 3 karakter',
+            ]
+        );
+
+        Mahasiswa::where('npm', $npm)->update($validated);
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diubah');
+    }
+
+    public function destroy(string $npm)
+    {
+        //
     }
 }

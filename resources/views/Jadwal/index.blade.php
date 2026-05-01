@@ -5,7 +5,7 @@
     <h2>Halaman Jadwal</h2>
 
     @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
 
     <div class="card">
@@ -17,17 +17,17 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-center">No</th>
-                        <th scope="col">Matakuliah</th>
-                        <th scope="col">Dosen</th>
-                        <th scope="col">Kelas</th>
-                        <th scope="col">Hari</th>
-                        <th scope="col">Jam</th>
-                        <th scope="col">Aksi</th>
+                        <th class="text-center">No</th>
+                        <th>Matakuliah</th>
+                        <th>Dosen</th>
+                        <th>Kelas</th>
+                        <th>Hari</th>
+                        <th>Jam</th>
+                        <th width="25%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($jadwal as $item)
+                    @foreach($dataJadwal as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->matakuliah->nama_matakuliah ?? '-' }}</td>
@@ -37,7 +37,8 @@
                         <td>{{ \Carbon\Carbon::parse($item->jam)->format('H:i') }}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                            <a href="{{ route('jadwal.edit', ['id' => $item->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('jadwal.detail', ['id' => $item->id]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>
                     </tr>
                     @endforeach

@@ -5,7 +5,7 @@
     <h2>Halaman KRS</h2>
 
     @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
 
     <div class="card">
@@ -17,15 +17,15 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-center">No</th>
-                        <th scope="col">NPM</th>
-                        <th scope="col">Nama Mahasiswa</th>
-                        <th scope="col">Matakuliah</th>
-                        <th scope="col">Aksi</th>
+                        <th class="text-center">No</th>
+                        <th>NPM</th>
+                        <th>Nama Mahasiswa</th>
+                        <th>Matakuliah</th>
+                        <th width="25%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($krs as $item)
+                    @foreach($dataKrs as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->npm }}</td>
@@ -33,7 +33,8 @@
                         <td>{{ $item->matakuliah->nama_matakuliah ?? '-' }}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                            <a href="{{ route('krs.edit', ['id' => $item->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('krs.detail', ['id' => $item->id]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>
                     </tr>
                     @endforeach
