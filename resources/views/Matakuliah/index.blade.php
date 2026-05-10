@@ -4,6 +4,10 @@
 <div class="container mt-3">
     <h2>Halaman Matakuliah</h2>
 
+    @if(session('error'))
+        <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+    @endif
+
     @if(session('success'))
         <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
@@ -32,7 +36,12 @@
                         <td>{{ $item->nama_matakuliah }}</td>
                         <td>{{ $item->sks }}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+                            <form action="{{ route('matakuliah.delete', ['kode' => $item->kode_matakuliah]) }}" method="POST" style="display:inline"
+                                onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
                             <a href="{{ route('matakuliah.edit', ['kode' => $item->kode_matakuliah]) }}" class="btn btn-warning btn-sm">Edit</a>
                             <a href="{{ route('matakuliah.detail', ['kode' => $item->kode_matakuliah]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>

@@ -74,6 +74,13 @@ class MahasiswaController extends Controller
 
     public function destroy(string $npm)
     {
-        //
+        $mahasiswa = Mahasiswa::findOrFail($npm);
+ 
+        if ($mahasiswa->krs()->count() > 0) {
+            return redirect()->route('mahasiswa.index')->with('error', 'Mahasiswa tidak bisa dihapus karena masih memiliki data KRS terkait!');
+        }
+ 
+        $mahasiswa->delete();
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }
 }

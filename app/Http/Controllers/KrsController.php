@@ -72,6 +72,8 @@ class KrsController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        $krs = Krs::findOrFail($id);
+        $krs->delete();
+        return redirect()->route('krs.index')->with('success', 'Data KRS berhasil dihapus');
     }
 }

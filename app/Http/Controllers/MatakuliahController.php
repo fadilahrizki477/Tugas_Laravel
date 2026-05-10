@@ -73,6 +73,13 @@ class MatakuliahController extends Controller
 
     public function destroy(string $kode)
     {
-        //
+          $matakuliah = Matakuliah::findOrFail($kode);
+ 
+        if ($matakuliah->jadwal()->count() > 0 || $matakuliah->krs()->count() > 0) {
+            return redirect()->route('matakuliah.index')->with('error', 'Matakuliah tidak bisa dihapus karena masih memiliki data jadwal atau KRS terkait!');
+        }
+ 
+        $matakuliah->delete();
+        return redirect()->route('matakuliah.index')->with('success', 'Data matakuliah berhasil dihapus');
     }
 }

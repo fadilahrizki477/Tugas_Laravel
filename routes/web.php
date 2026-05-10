@@ -18,6 +18,7 @@ Route::post('/dosen/store', [DosenController::class, 'store'])->name('dosen.stor
 Route::get('/dosen/{nidn}/detail', [DosenController::class, 'show'])->name('dosen.detail');
 Route::get('/dosen/{nidn}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
 Route::put('/dosen/{nidn}/update', [DosenController::class, 'update'])->name('dosen.update');
+Route::delete('/dosen/{nidn}/delete', [DosenController::class, 'destroy'])->name('dosen.delete');
 
 // MAHASISWA
 Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
@@ -26,6 +27,7 @@ Route::post('/mahasiswa/store', [MahasiswaController::class, 'store'])->name('ma
 Route::get('/mahasiswa/{npm}/detail', [MahasiswaController::class, 'show'])->name('mahasiswa.detail');
 Route::get('/mahasiswa/{npm}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
 Route::put('/mahasiswa/{npm}/update', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+Route::delete('/mahasiswa/{npm}/delete', [MahasiswaController::class, 'destroy'])->name('mahasiswa.delete');
 
 // MATAKULIAH
 Route::get('/matakuliah', [MatakuliahController::class, 'index'])->name('matakuliah.index');
@@ -34,6 +36,7 @@ Route::post('/matakuliah/store', [MatakuliahController::class, 'store'])->name('
 Route::get('/matakuliah/{kode}/detail', [MatakuliahController::class, 'show'])->name('matakuliah.detail');
 Route::get('/matakuliah/{kode}/edit', [MatakuliahController::class, 'edit'])->name('matakuliah.edit');
 Route::put('/matakuliah/{kode}/update', [MatakuliahController::class, 'update'])->name('matakuliah.update');
+Route::delete('/matakuliah/{kode}/delete', [MatakuliahController::class, 'destroy'])->name('matakuliah.delete');
 
 // JADWAL
 Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
@@ -42,6 +45,7 @@ Route::post('/jadwal/store', [JadwalController::class, 'store'])->name('jadwal.s
 Route::get('/jadwal/{id}/detail', [JadwalController::class, 'show'])->name('jadwal.detail');
 Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
 Route::put('/jadwal/{id}/update', [JadwalController::class, 'update'])->name('jadwal.update');
+Route::delete('/jadwal/{id}/delete', [JadwalController::class, 'destroy'])->name('jadwal.delete');
 
 // KRS
 Route::get('/krs', [KrsController::class, 'index'])->name('krs.index');
@@ -50,3 +54,4 @@ Route::post('/krs/store', [KrsController::class, 'store'])->name('krs.store');
 Route::get('/krs/{id}/detail', [KrsController::class, 'show'])->name('krs.detail');
 Route::get('/krs/{id}/edit', [KrsController::class, 'edit'])->name('krs.edit');
 Route::put('/krs/{id}/update', [KrsController::class, 'update'])->name('krs.update');
+Route::delete('/krs/{id}/delete', [KrsController::class, 'destroy'])->name('krs.delete');

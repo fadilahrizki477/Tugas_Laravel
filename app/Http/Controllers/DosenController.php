@@ -67,6 +67,13 @@ class DosenController extends Controller
 
     public function destroy(string $nidn)
     {
-        //
+       $dosen = Dosen::findOrFail($nidn);
+ 
+        if ($dosen->mahasiswa()->count() > 0 || $dosen->jadwal()->count() > 0) {
+            return redirect()->route('dosen.index')->with('error', 'Dosen tidak bisa dihapus karena masih memiliki data mahasiswa atau jadwal terkait!');
+        }
+ 
+        $dosen->delete();
+        return redirect()->route('dosen.index')->with('success', 'Data dosen berhasil dihapus');
     }
 }
