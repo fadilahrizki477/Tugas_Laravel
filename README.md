@@ -136,4 +136,4 @@ php artisan serve
 
 ## Pembuat
 
-Dibuat oleh **[Moh Fadilah Rizki]** sebagai Tugas Besar Mata Kuliah Web II (IF53413).
+Dibuat oleh **[Moh Fadilah Rizki]** sebagai Tugas Besar Mata Kuliah Web II.
