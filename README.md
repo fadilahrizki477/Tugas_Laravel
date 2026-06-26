@@ -2,7 +2,7 @@
 
 Aplikasi web berbasis **Laravel** yang mensimulasikan Sistem Informasi Akademik (SIAKAD) sederhana. Dibuat sebagai Tugas Besar Mata Kuliah Web II.
 
-🔗 **Link Hosting:** [ kikisiak.page.gd ] disarankan jangan buka di edge
+🔗 **Link Hosting:** [ [kikisiak.page.gd](http://kikisiak.page.gd/) ] disarankan jangan buka di edge
 
 ---
 
