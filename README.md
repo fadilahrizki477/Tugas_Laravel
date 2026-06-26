@@ -4,6 +4,13 @@ Aplikasi web berbasis **Laravel** yang mensimulasikan Sistem Informasi Akademik 
 
 🔗 **Link Hosting:** [ [kikisiak.page.gd](http://kikisiak.page.gd/) ] disarankan jangan buka di edge
 
+### Akun Default (hasil seeder)
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@gmail.com | password |
+| Mahasiswa | [npm_mahasiswa]
+5520124085@gmail.com | password |
+
 ---
 
 ## Identitas
@@ -110,13 +117,6 @@ php artisan migrate:fresh --seed
 # Jalankan server
 php artisan serve
 ```
-
-### Akun Default (hasil seeder)
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@gmail.com | password |
-| Mahasiswa | [npm_mahasiswa]
-              5520124085@gmail.com | password |
 
 ---
 
