@@ -1,23 +1,35 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
-    <h2>Halaman Dosen</h2>
+<div class="content-header">
+    <div class="container-fluid">
+        <h1>Halaman Dosen</h1>
+    </div>
+</div>
+
+<div class="container-fluid">
 
     @if(session('error'))
-        <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+    <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
     @endif
 
     @if(session('success'))
-        <div class="alert alert-success" role="alert">{{ session('success') }}</div>
+    <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
 
-    <div class="card">
+    <div class="card card-outline card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Daftar Dosen</h3>
+        </div>
         <div class="card-body">
-            <div class="mb-2">
+            <div class="mb-2 d-flex justify-content-between align-items-center">
                 <a href="{{ route('dosen.create') }}" class="btn btn-primary">Tambah Data</a>
+
+                <form class="d-flex" method="GET" action="{{ route('dosen.index') }}">
+                    <input class="form-control mr-2" type="search" name="search" placeholder="Cari Dosen" value="{{ $search ?? '' }}">
+                    <button class="btn btn-outline-success" type="submit">Cari</button>
+                </form>
             </div>
-            <div class="card-header">Daftar Dosen</div>
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -28,9 +40,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($dataDosen as $item)
+                    @forelse($dataDosen as $index => $item)
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $dataDosen->firstItem() + $index }}</td>
                         <td>{{ $item->nidn }}</td>
                         <td>{{ $item->nama }}</td>
                         <td>
@@ -44,9 +56,16 @@
                             <a href="{{ route('dosen.detail', ['nidn' => $item->nidn]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="4">
+                            <span class="text-danger">data yang anda cari tidak ada</span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
+            {{ $dataDosen->links() }}
         </div>
     </div>
 </div>

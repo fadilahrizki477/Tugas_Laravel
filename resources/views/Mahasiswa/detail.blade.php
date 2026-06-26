@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
+<div class="container-fluid">
     <h1>Detail Mahasiswa</h1>
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-header">Detail Data Mahasiswa</div>
         <div class="card-body">
             <p>NPM: {{ $detailMahasiswa->npm }}</p>

@@ -7,10 +7,19 @@ use App\Models\Matakuliah;
 
 class MatakuliahController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dataMatakuliah = Matakuliah::orderBy('kode_matakuliah', 'asc')->get();
-        return view('matakuliah.index', compact('dataMatakuliah'));
+        $search = $request->input('search');
+
+        $dataMatakuliah = Matakuliah::when($search, function ($query, $search) {
+                $query->where('kode_matakuliah', 'like', "%{$search}%")
+                      ->orWhere('nama_matakuliah', 'like', "%{$search}%");
+            })
+            ->orderBy('kode_matakuliah', 'asc')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('matakuliah.index', compact('dataMatakuliah', 'search'));
     }
 
     public function create()
@@ -37,7 +46,7 @@ class MatakuliahController extends Controller
         );
 
         Matakuliah::create($validated);
-        return redirect()->route('matakuliah')->with('success', 'Data matakuliah berhasil ditambahkan');
+        return redirect()->route('matakuliah.index')->with('success', 'Data matakuliah berhasil ditambahkan');
     }
 
     public function show(string $kode)

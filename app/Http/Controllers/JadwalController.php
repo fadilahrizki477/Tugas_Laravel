@@ -3,16 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Jadwal;
 use App\Models\Matakuliah;
 use App\Models\Dosen;
+use App\Models\Krs;
 
 class JadwalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dataJadwal = Jadwal::with(['matakuliah', 'dosen'])->orderBy('id', 'asc')->get();
-        return view('jadwal.index', compact('dataJadwal'));
+        $search = $request->input('search');
+        $user   = Auth::user();
+
+        $query = Jadwal::with(['matakuliah', 'dosen']);
+
+        // Mahasiswa hanya melihat jadwal dari matakuliah+kelas yang sudah diambil di KRS
+        if ($user && $user->npm) {
+            $krsSaya = Krs::where('npm', $user->npm)->get(['kode_matakuliah', 'kelas']);
+
+            $query->where(function ($q) use ($krsSaya) {
+                foreach ($krsSaya as $krs) {
+                    $q->orWhere(function ($qq) use ($krs) {
+                        $qq->where('kode_matakuliah', $krs->kode_matakuliah)
+                            ->where('kelas', $krs->kelas);
+                    });
+                }
+            });
+
+            // Kalau belum ada KRS sama sekali, pastikan hasil kosong (bukan semua data)
+            if ($krsSaya->isEmpty()) {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        $dataJadwal = $query
+            ->when($search, function ($q, $search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('hari', 'like', "%{$search}%")
+                       ->orWhere('kelas', 'like', "%{$search}%")
+                       ->orWhereHas('matakuliah', function ($qqq) use ($search) {
+                           $qqq->where('nama_matakuliah', 'like', "%{$search}%");
+                       })
+                       ->orWhereHas('dosen', function ($qqq) use ($search) {
+                           $qqq->where('nama', 'like', "%{$search}%");
+                       });
+                });
+            })
+            ->orderBy('id', 'asc')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('jadwal.jadwal-index', compact('dataJadwal', 'search'));
     }
 
     public function create()
@@ -49,7 +91,7 @@ class JadwalController extends Controller
             'jam'             => '2000-01-01 ' . $validated['jam'] . ':00',
         ]);
 
-        return redirect()->route('jadwal')->with('success', 'Data jadwal berhasil ditambahkan');
+        return redirect()->route('jadwal.index')->with('success', 'Data jadwal berhasil ditambahkan');
     }
 
     public function show(string $id)
@@ -98,7 +140,7 @@ class JadwalController extends Controller
 
     public function destroy(string $id)
     {
-          $jadwal = Jadwal::findOrFail($id);
+        $jadwal = Jadwal::findOrFail($id);
         $jadwal->delete();
         return redirect()->route('jadwal.index')->with('success', 'Data jadwal berhasil dihapus');
     }

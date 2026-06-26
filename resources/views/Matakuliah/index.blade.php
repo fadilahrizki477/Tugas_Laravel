@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
+<div class="container-fluid">
     <h2>Halaman Matakuliah</h2>
 
     @if(session('error'))
@@ -12,10 +12,15 @@
         <div class="alert alert-success" role="alert">{{ session('success') }}</div>
     @endif
 
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-body">
-            <div class="mb-2">
+            <div class="mb-2 d-flex justify-content-between align-items-center">
                 <a href="{{ route('matakuliah.create') }}" class="btn btn-primary">Tambah Data</a>
+
+                <form class="d-flex" method="GET" action="{{ route('matakuliah.index') }}">
+                    <input class="form-control me-2" type="search" name="search" placeholder="Cari Matakuliah" value="{{ $search ?? '' }}">
+                    <button class="btn btn-outline-success" type="submit">Cari</button>
+                </form>
             </div>
             <div class="card-header">Daftar Matakuliah</div>
             <table class="table table-bordered table-hover table-striped">
@@ -29,9 +34,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($dataMatakuliah as $item)
+                    @forelse($dataMatakuliah as $index => $item)
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $dataMatakuliah->firstItem() + $index }}</td>
                         <td>{{ $item->kode_matakuliah }}</td>
                         <td>{{ $item->nama_matakuliah }}</td>
                         <td>{{ $item->sks }}</td>
@@ -46,9 +51,16 @@
                             <a href="{{ route('matakuliah.detail', ['kode' => $item->kode_matakuliah]) }}" class="btn btn-info btn-sm">Detail</a>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="5">
+                            <span class="text-danger">data yang anda cari tidak ada</span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
+            {{ $dataMatakuliah->links() }}
         </div>
     </div>
 </div>

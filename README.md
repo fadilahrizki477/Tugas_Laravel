@@ -1,59 +1,140 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SIAK - Sistem Informasi Akademik Sederhana
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis **Laravel** yang mensimulasikan Sistem Informasi Akademik (SIAKAD) sederhana. Dibuat sebagai Tugas Besar Mata Kuliah Web II.
 
-## About Laravel
+🔗 **Link Hosting:** [kikisiak.page.gd] disarankan jangan buka di edge
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Identitas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Nama:** [Moh Fadilah Rizki]
+- **NPM:** [5520124085]
+- **Kelas:** [IF-C 24]
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Deskripsi Aplikasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+SIAK adalah aplikasi pengelolaan data akademik kampus secara sederhana, mencakup pengelolaan data Dosen, Mahasiswa, Matakuliah, Jadwal Perkuliahan, hingga Kartu Rencana Studi (KRS). Aplikasi ini memiliki dua jenis pengguna dengan hak akses berbeda:
 
-## Laravel Sponsors
+- **Admin** — dapat mengelola seluruh data (Dosen, Mahasiswa, Matakuliah, Jadwal, KRS)
+- **Mahasiswa** — hanya dapat melihat jadwal kuliah sesuai matakuliah yang diambil, mengisi KRS, dan melihat KRS miliknya sendiri
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Fitur Utama
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Autentikasi & Otorisasi
+- Login & Logout (Laravel Breeze)
+- 2 role pengguna: **Admin** dan **Mahasiswa**, masing-masing dengan hak akses berbeda (dibatasi via Middleware)
+- Ubah password sendiri lewat halaman Dashboard
+- Reset password mahasiswa oleh Admin
+- Reset password Admin lewat mekanisme darurat (untuk keperluan hosting gratisan/shared tanpa akses SSH)
 
-## Contributing
+### Manajemen Data (CRUD)
+- **Dosen** — Tambah, Edit, Hapus, Lihat Detail
+- **Mahasiswa** — Tambah, Edit, Hapus, Lihat Detail (otomatis membuat akun login untuk setiap mahasiswa baru)
+- **Matakuliah** — Tambah, Edit, Hapus, Lihat Detail
+- **Jadwal** — Tambah, Edit, Hapus, Lihat Detail (relasi ke Dosen & Matakuliah, termasuk penentuan kelas, hari, dan jam)
+- **KRS** — Tambah (ambil matakuliah + kelas), Hapus, Lihat Detail (relasi ke Mahasiswa & Matakuliah)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Validasi
+Setiap form dilengkapi validasi Laravel (required, unique, exists, dll) beserta pesan error yang jelas.
 
-## Code of Conduct
+### Bonus
+- 🔍 Pencarian & filter data pada setiap halaman daftar
+- 📄 Pagination pada setiap halaman daftar
+- 📊 Dashboard statistik (jumlah Dosen, Mahasiswa, Matakuliah, Jadwal, KRS untuk Admin; statistik pribadi untuk Mahasiswa)
+- 📑 Export data KRS ke PDF dan Excel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Penjelasan Fungsi Tiap Halaman
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Halaman | Fungsi |
+|---|---|
+| **Login** | Autentikasi pengguna (Admin/Mahasiswa) untuk masuk ke sistem |
+| **Dashboard** | Menampilkan ringkasan statistik data akademik (Admin) atau statistik pribadi (Mahasiswa), serta form ubah password |
+| **Dosen** | Kelola data dosen pengampu matakuliah (khusus Admin) |
+| **Mahasiswa** | Kelola data mahasiswa beserta dosen walinya, termasuk reset password akun mahasiswa (khusus Admin) |
+| **Matakuliah** | Kelola data matakuliah dan jumlah SKS (khusus Admin) |
+| **Jadwal** | Kelola jadwal perkuliahan (Admin); Mahasiswa hanya dapat melihat jadwal dari matakuliah dan kelas yang telah diambil di KRS |
+| **KRS** | Pengelolaan Kartu Rencana Studi. Admin dapat mengelola KRS seluruh mahasiswa; Mahasiswa hanya dapat mengelola KRS miliknya sendiri, termasuk export ke PDF/Excel |
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Teknologi yang Digunakan
+
+- **Laravel** (PHP Framework)
+- **Laravel Breeze** (Autentikasi)
+- **MySQL** (Database)
+- **Bootstrap** (UI Framework)
+- **Eloquent ORM** & **Eloquent Relationship**
+- **Migration** & **Seeder**
+- **Middleware** (Role-based access control)
+- **barryvdh/laravel-dompdf** (Export PDF)
+- **maatwebsite/excel** (Export Excel)
+
+---
+
+## Struktur Relasi Database (ERD)
+
+- **dosen** — memiliki banyak **mahasiswa** (sebagai dosen wali) dan **jadwal**
+- **mahasiswa** — memiliki banyak **krs**
+- **matakuliah** — memiliki banyak **jadwal** dan **krs**
+- **jadwal** — terhubung ke **dosen** dan **matakuliah**
+- **krs** — terhubung ke **mahasiswa** dan **matakuliah**
+
+---
+
+## Cara Menjalankan di Lokal
+
+```bash
+# Clone repository
+git clone [link-repo]
+cd [nama-folder-project]
+
+# Install dependency
+composer install
+npm install && npm run build
+
+# Konfigurasi environment
+cp .env.example .env
+php artisan key:generate
+# Sesuaikan konfigurasi database di file .env
+
+# Migrasi & seeding database
+php artisan migrate:fresh --seed
+
+# Jalankan server
+php artisan serve
+```
+
+### Akun Default (hasil seeder)
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@gmail.com | password |
+| Mahasiswa | [npm_mahasiswa]
+              5520124085@gmail.com | password |
+
+---
+
+## Screenshot Aplikasi
+
+| Halaman | Screenshot |
+|---|---|
+| Login | `screenshots/login.png` |
+| Dashboard Admin | `screenshots/dashboard-admin.png` |
+| Dashboard Mahasiswa | `screenshots/dashboard-mahasiswa.png` |
+| Dosen | `screenshots/dosen.png` |
+| Mahasiswa | `screenshots/mahasiswa.png` |
+| Matakuliah | `screenshots/matakuliah.png` |
+| Jadwal | `screenshots/jadwal.png` |
+| KRS | `screenshots/krs.png` |
+
+---
+
+## Pembuat
+
+Dibuat oleh **[Moh Fadilah Rizki]** sebagai Tugas Besar Mata Kuliah Web II (IF53413).

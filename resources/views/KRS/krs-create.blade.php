@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
+<div class="container-fluid">
     <h1>{{ isset($detailKrs) ? 'Edit' : 'Tambah' }} KRS</h1>
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-header">{{ isset($detailKrs) ? 'Edit' : 'Tambah' }} KRS</div>
         <div class="card-body">
 
@@ -13,6 +13,7 @@
                     @method('PUT')
                 @endif
 
+                @if(auth()->user()->isAdmin())
                 <div class="mb-3">
                     <label class="form-label">Mahasiswa</label>
                     <select name="npm" class="form-select">
@@ -28,21 +29,29 @@
                     <div class="form-text text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                @else
+                <div class="mb-3">
+                    <label class="form-label">Mahasiswa</label>
+                    <input type="text" class="form-control" value="{{ auth()->user()->name }} ({{ auth()->user()->npm }})" disabled>
+                    <small class="text-muted">KRS akan otomatis terdaftar atas nama Anda</small>
+                </div>
+                @endif
 
                 <div class="mb-3">
-                    <label class="form-label">Matakuliah</label>
-                    <select name="kode_matakuliah" class="form-select">
-                        <option value="">-- Pilih Matakuliah --</option>
-                        @foreach($matakuliah as $mk)
-                            <option value="{{ $mk->kode_matakuliah }}"
-                                {{ old('kode_matakuliah', $detailKrs->kode_matakuliah ?? '') == $mk->kode_matakuliah ? 'selected' : '' }}>
-                                {{ $mk->nama_matakuliah }} ({{ $mk->kode_matakuliah }})
+                    <label class="form-label">Matakuliah & Kelas</label>
+                    <select name="pilihan" class="form-select">
+                        <option value="">-- Pilih Matakuliah & Kelas --</option>
+                        @foreach($jadwalOptions as $jadwal)
+                            <option value="{{ $jadwal->kode_matakuliah }}|{{ $jadwal->kelas }}"
+                                {{ old('pilihan', isset($detailKrs) ? $detailKrs->kode_matakuliah . '|' . $detailKrs->kelas : '') == $jadwal->kode_matakuliah . '|' . $jadwal->kelas ? 'selected' : '' }}>
+                                {{ $jadwal->matakuliah->nama_matakuliah ?? $jadwal->kode_matakuliah }} - Kelas {{ $jadwal->kelas }} ({{ $jadwal->hari }})
                             </option>
                         @endforeach
                     </select>
-                    @error('kode_matakuliah')
+                    @error('pilihan')
                     <div class="form-text text-danger">{{ $message }}</div>
                     @enderror
+                    <small class="text-muted">Hanya matakuliah yang memiliki jadwal aktif yang dapat dipilih</small>
                 </div>
 
                 <a href="{{ route('krs.index') }}" class="btn btn-secondary">Kembali</a>

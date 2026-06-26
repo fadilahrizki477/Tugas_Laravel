@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
+<div class="container-fluid">
     <h1>{{ isset($detailMatakuliah) ? 'Edit' : 'Tambah' }} Matakuliah</h1>
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-header">{{ isset($detailMatakuliah) ? 'Edit' : 'Tambah' }} Matakuliah</div>
         <div class="card-body">
 

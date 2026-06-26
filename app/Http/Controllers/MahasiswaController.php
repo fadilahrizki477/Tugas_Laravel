@@ -3,15 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use App\Models\User;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dataMahasiswa = Mahasiswa::with('dosen')->orderBy('npm', 'asc')->get();
-        return view('mahasiswa.index', compact('dataMahasiswa'));
+        $search = $request->input('search');
+
+        $dataMahasiswa = Mahasiswa::with('dosen')
+            ->when($search, function ($query, $search) {
+                $query->where('npm', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%");
+            })
+            ->orderBy('npm', 'asc')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('mahasiswa.index', compact('dataMahasiswa', 'search'));
     }
 
     public function create()
@@ -38,7 +50,17 @@ class MahasiswaController extends Controller
         );
 
         Mahasiswa::create($validated);
-        return redirect()->route('mahasiswa')->with('success', 'Data mahasiswa berhasil ditambahkan');
+
+        // Otomatis buat akun login untuk mahasiswa baru
+        User::create([
+            'name'     => $validated['nama'],
+            'email'    => $validated['npm'] . '@gmail.com',
+            'password' => Hash::make('password'),
+            'role'     => 'mahasiswa',
+            'npm'      => $validated['npm'],
+        ]);
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan. Akun login otomatis dibuat (email: ' . $validated['npm'] . '@gmail.com, password: password)');
     }
 
     public function show(string $npm)
@@ -69,17 +91,37 @@ class MahasiswaController extends Controller
         );
 
         Mahasiswa::where('npm', $npm)->update($validated);
+
+        // Sinkronkan nama di akun login juga
+        User::where('npm', $npm)->update(['name' => $validated['nama']]);
+
         return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diubah');
+    }
+
+    public function resetPassword(string $npm)
+    {
+        $user = User::where('npm', $npm)->first();
+
+        if (!$user) {
+            return redirect()->route('mahasiswa.index')->with('error', 'Akun login untuk mahasiswa ini tidak ditemukan.');
+        }
+
+        $user->update(['password' => Hash::make('password')]);
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Password mahasiswa berhasil direset ke default (password)');
     }
 
     public function destroy(string $npm)
     {
         $mahasiswa = Mahasiswa::findOrFail($npm);
- 
+
         if ($mahasiswa->krs()->count() > 0) {
             return redirect()->route('mahasiswa.index')->with('error', 'Mahasiswa tidak bisa dihapus karena masih memiliki data KRS terkait!');
         }
- 
+
+        // Hapus akun login terkait juga
+        User::where('npm', $npm)->delete();
+
         $mahasiswa->delete();
         return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }

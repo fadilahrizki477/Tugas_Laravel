@@ -7,10 +7,19 @@ use App\Models\Dosen;
 
 class DosenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dataDosen = Dosen::orderBy('nidn', 'asc')->get();
-        return view('dosen.index', compact('dataDosen'));
+        $search = $request->input('search');
+
+        $dataDosen = Dosen::when($search, function ($query, $search) {
+                $query->where('nidn', 'like', "%{$search}%")
+                      ->orWhere('nama', 'like', "%{$search}%");
+            })
+            ->orderBy('nidn', 'asc')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('dosen.index', compact('dataDosen', 'search'));
     }
 
     public function create()
@@ -34,7 +43,7 @@ class DosenController extends Controller
         );
 
         Dosen::create($validated);
-        return redirect()->route('dosen')->with('success', 'Data dosen berhasil ditambahkan');
+        return redirect()->route('dosen.index')->with('success', 'Data dosen berhasil ditambahkan');
     }
 
     public function show(string $nidn)

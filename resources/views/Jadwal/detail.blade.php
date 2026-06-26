@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<div class="container mt-3">
+<div class="container-fluid">
     <h1>Detail Jadwal</h1>
-    <div class="card">
+    <div class="card card-outline card-primary">
         <div class="card-header">Detail Data Jadwal</div>
         <div class="card-body">
             <p>Matakuliah: {{ $detailJadwal->matakuliah->nama_matakuliah ?? '-' }}</p>
