@@ -4,12 +4,11 @@ Aplikasi web berbasis **Laravel** yang mensimulasikan Sistem Informasi Akademik 
 
 🔗 **Link Hosting:** [ [kikisiak.page.gd](http://kikisiak.page.gd/) ] disarankan jangan buka di edge
 
-### Akun Default (hasil seeder)
+### Akun Default
 | Role | Email | Password |
 |---|---|---|
 | Admin | admin@gmail.com | password |
-| Mahasiswa | [npm_mahasiswa]
-5520124085@gmail.com | password |
+| Mahasiswa | [npm_mahasiswa] 5520124085@gmail.com | password |
 
 ---
 
